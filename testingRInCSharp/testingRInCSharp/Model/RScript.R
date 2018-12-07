@@ -1,0 +1,46 @@
+# обработка данных
+data <- read.csv("..\\..\\Model\\SolarPrediction.csv", header = TRUE) # считываем данные
+
+colnames(data) <- c("unix_time", "date", "time", "radiation", "temperature", "pressure", "humidity", "wind_direction", "wind_speed", "sun_rise", "sun_set")
+
+rise <- strptime(paste(gsub(data$date, pattern = '\\s{1,}\\d.*$', replacement = ' '), data$sun_rise), '%m/%d/%Y %H:%M:%S') # время восхода солнца
+
+set <- strptime(paste(gsub(data$date, pattern = '\\s{1,}\\d.*$', replacement = ' '), data$sun_set), '%m/%d/%Y %H:%M:%S') # время захода солнца
+
+day_of_year <- as.POSIXlt(data$unix_time, origin = '1970-01-01')$yday
+
+data$day_time <- as.numeric(difftime(set, rise, units = 'hours')) # время дня в часах
+data$day_of_year <- day_of_year
+#data <- data.frame(Daytime=as.numeric(difftime(set,rise,units ='hours')),data)
+
+
+
+data <- data[, - c(1, 10, 11)]
+
+# конец обработки данных
+
+# избавляемся от выбросов
+#install.packages("dplyr")
+#library(dplyr)
+#data <- data %>%
+# filter(radiation>=100 & radiation<1000) %>%
+#filter(temperature>42 & temperature<=70)%>%
+#filter(pressure>30.33 & pressure<30.54)%>%
+#filter(wind_direction<=210)%>%
+#filter(wind_speed<=12)
+
+data <- data[data$radiation >= 100 & data$radiation < 1000 &
+             data$temperature > 42 & data$temperature <= 70 &
+             data$pressure > 30.33 & data$pressure < 30.54 &
+             data$wind_direction <= 210 & data$wind_speed <= 12,]
+
+# делим набор на две части
+odds <- seq(1, nrow(data), by = 2)
+data.in <- data[odds,] # data[1,], data[3,] ...
+data.out <- data[-odds,] # data[2,], data[4,] ...
+
+# тренировка лин. модели по набору данных data.in
+linear.model.half.1 <- lm(temperature ~ radiation + pressure + humidity + wind_direction + wind_speed + day_time, data = data.in)
+
+nrow(data)
+

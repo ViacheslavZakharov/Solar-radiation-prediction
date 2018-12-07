@@ -1,0 +1,321 @@
+---
+title: "Solar radiation prediction"
+author: "DashaKalugina"
+date: '4 декабря 2018 г '
+output: html_document
+---
+
+Исходные данные:
+
+```{r}
+data <- read.csv("SolarPrediction.csv", header=TRUE)
+
+nrow(data)
+ncol(data)
+head(data)
+str(data)
+colnames(data) <- c("unix_time","date","time", "radiation", "temperature", "pressure", "humidity", "wind_direction", "wind_speed", "sun_rise", "sun_set")
+
+rise <- strptime(paste(gsub(data$date, pattern = '\\s{1,}\\d.*$', replacement = ' '), data$sun_rise), '%m/%d/%Y %H:%M:%S') # время восхода солнца
+
+set <- strptime(paste(gsub(data$date, pattern = '\\s{1,}\\d.*$', replacement = ' '), data$sun_set), '%m/%d/%Y %H:%M:%S') # время захода солнца
+
+day_of_year <- as.POSIXlt(data$unix_time,origin='1970-01-01')$yday
+
+data$day_time <- as.numeric(difftime(set,rise,units ='hours')) # время дня в часах
+data$day_of_year <- day_of_year
+#data <- data.frame(Daytime=as.numeric(difftime(set,rise,units ='hours')),data)
+
+data <- data[,-c(1,10,11)]
+data1<-data
+```
+
+```{r}
+
+```
+
+
+
+```{r}
+
+```
+
+Удаляем ненужные столбцы:
+
+```{r}
+```
+
+```{r}
+#data$date <- paste(substr(data$date,1,9),data$time) # соединяем в одну колонку дату и время
+#data <- data[,-2] # удаляем колонку time
+head(data)
+str(data)
+nrow(data)
+ncol(data)
+```
+
+Избавляемся от выбросов. Для определния выбросов строим:
+
+- диаграммы размаха и гистограммы распределения значений радиации и температуры воздуха:
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(data$radiation, main="Солнечная радиация")
+boxplot(data$temperature, main="Температура воздуха")
+
+par(mfrow=c(1,2))
+hist(data$radiation, main="Солнечная радиация")
+hist(data$temperature, main="Температура воздуха")
+
+plot(sort(data$radiation))
+plot(sort(data$temperature))
+```
+Видим, что по температуре имеются 3 выброса.
+
+- диаграммы размаха и гистограммы распределения значений давления и влажности воздуха:
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(data$pressure, main="Давление")
+boxplot(data$humidity, main="Влажность")
+
+hist(data$pressure, main="Давление")
+hist(data$humidity, main="Влажность")
+
+plot(sort(data$pressure))
+plot(sort(data$humidity))
+```
+
+Среди значений давления имеются выбросы.
+
+- диаграммы размаха и гистограммы распределения значений направления и скорости ветра:
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(data$wind_direction, main="Направление ветра")
+boxplot(data$wind_speed, main="Скорость ветра")
+
+par(mfrow=c(1,2))
+hist(data$wind_direction, main="Направление ветра")
+hist(data$wind_speed, main="Скорость ветра")
+
+plot(sort(data$wind_direction))
+plot(sort(data$wind_speed))
+```
+
+В обоих наборах значений направления и скорости ветра есть выбросы.
+
+Убираем выбросы:
+
+  
+
+```{r}
+library(dplyr)
+data <- data %>%
+  filter(radiation>=100 & radiation<1000) %>%
+  filter(temperature>42 & temperature<=70)%>%
+  filter(pressure>30.33 & pressure<30.54)%>%
+  filter(wind_direction<=210)%>%
+  filter(wind_speed<=12)
+```
+
+Теперь диаграммы размаха выглядят следующим образом:
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(data$radiation, main="Солнечная радиация")
+boxplot(data$temperature, main="Температура воздуха")
+
+boxplot(data$pressure, main="Давление")
+boxplot(data$humidity, main="Влажность")
+
+boxplot(data$wind_direction, main="Направление ветра")
+boxplot(data$wind_speed, main="Скорость ветра")
+```
+```{r}
+#linear.model.1 <- lm(radiation ~ temperature +pressure +humidity +wind_direction +wind_speed +day_time, data=data)
+linear.model.1 <- lm(temperature ~ radiation +pressure +humidity +wind_direction +wind_speed +day_time, data=data) 
+summary(linear.model.1)
+plot(linear.model.1)
+```
+
+```{r}
+odds <- seq(1, nrow(data), by=2)
+data.in <- data[odds,] # data[1,], data[3,] ...
+data.out <- data[-odds,] # data[2,], data[4,] ...
+```
+
+```{r}
+library(caret)
+validation_index <- createDataPartition(data$radiation, p=0.80, list=FALSE)
+validation <- data[-validation_index,]
+```
+
+```{r}
+linear.model.half.1 <- lm(temperature ~ radiation +pressure +humidity +wind_direction +wind_speed +day_time, data=data.in) # тренировка лин. модели по набору данных data.in
+summary(linear.model.half.1)
+```
+
+```{r}
+predict.1 <- predict(linear.model.half.1, data.in)
+cor(data.in$temperature, predict.1)
+plot(data.in$temperature, predict.1)
+```
+
+```{r}
+predict.out.1 <- predict(linear.model.half.1, data.out) # предсказание значений по валидационному набору
+cor(data.out$temperature, predict.out.1)
+plot(data.out$temperature, predict.out.1)
+```
+
+
+
+
+
+
+
+
+
+
+# Radiation by day
+
+
+```{r}
+by_day <- data1 %>%
+  group_by(date) %>%
+  summarise(avg_rad = mean(radiation),
+            avg_temperature = mean(temperature),
+            avg_pressure = mean(pressure),
+            avg_humidity = mean (humidity),
+            avg_direction = mean(wind_direction),
+            avg_speed = mean(wind_speed),
+            time_of_sun=mean(day_time))
+```
+
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(by_day$avg_rad)
+boxplot(by_day$avg_temperature)
+
+boxplot(by_day$avg_pressure) # выбросы 
+boxplot(by_day$avg_humidity)
+
+boxplot(by_day$avg_direction)# выбросы 
+boxplot(by_day$avg_speed)# выбросы 
+```
+
+```{r}
+library(dplyr)
+by_day <- by_day %>%
+  filter(avg_pressure>=30.36 & avg_pressure<=30.50)
+```
+
+```{r}
+ggplot(by_day)+
+  geom_point(mapping = aes(y = avg_temperature, x = avg_rad), colour = "salmon", size = 2)+
+  ylab("Total Radiation")+
+  xlab("Temperature / F")+
+  ggtitle("Effect of Daily Avg. Temperature on Radiation")
+```
+
+```{r}
+plot(avg_temperature ~ avg_rad, data=by_day)
+```
+
+```{r}
+odds <- seq(1, nrow(by_day), by=2)
+data.in <- by_day[odds,] # data[1,], data[3,] ...
+data.out <- by_day[-odds,] # data[2,], data[4,] ...
+```
+
+```{r}
+linear.model.1 <- lm(avg_temperature ~ avg_rad  +avg_humidity +time_of_sun +avg_pressure, data=data.in) 
+summary(linear.model.1)
+plot(linear.model.1)
+```
+
+
+```{r}
+predict.1 <- predict(linear.model.1, data.in)
+cor(data.in$avg_temperature, predict.1)
+plot(data.in$avg_temperature, predict.1)
+```
+
+```{r}
+predict.out.1 <- predict(linear.model.1, data.out) # предсказание значений по валидационному набору
+cor(data.out$avg_temperature, predict.out.1)
+plot(data.out$avg_temperature, predict.out.1)
+```
+
+
+
+####################
+
+
+# Recursive Feature Elimination (RFE)
+```{r}
+library(caret)
+library(randomForest)
+rfcontrol <- rfeControl(functions=rfFuncs, method="cv", number=5)
+rfProfile <- rfe(x = data.in[,c(1,4,5,6,7,8,9)],y=data.in[,3],sizes = c(1:7),rfeControl =rfcontrol,metric='Rsquared',maximize = TRUE )
+```
+
+Возможные зависимости:
+
+- Солнечная радиация и температура воздуха:
+
+```{r}
+plot(temperature ~ radiation, data=data,'p',main = "Зависимость солнечной радиации от температуры")
+```
+
+
+
+```{r}
+#linear.model.1 <- lm(radiation ~ temperature +pressure +humidity +wind_direction +wind_speed +day_time, data=data)
+linear.model.1 <- lm(temperature ~ radiation +pressure +humidity +wind_direction +wind_speed +day_time, data=data) 
+summary(linear.model.1)
+plot(linear.model.1)
+```
+
+```{r}
+odds <- seq(1, nrow(data), by=2)
+data.in <- data[odds,] # data[1,], data[3,] ...
+data.out <- data[-odds,] # data[2,], data[4,] ...
+```
+
+```{r}
+linear.model.half.1 <- lm(temperature ~ radiation +pressure +humidity +wind_direction +wind_speed +day_time, data=data) # тренировка лин. модели по набору данных data.in
+summary(linear.model.half.1)
+```
+
+```{r}
+predict.1 <- predict(linear.model.half.1, data.in)
+cor(data.in$temperature, predict.1)
+plot(data.in$temperature, predict.1)
+```
+
+```{r}
+predict.out.1 <- predict(linear.model.half.1, data.out) # предсказание значений по валидационному набору
+cor(data.out$temperature, predict.out.1)
+plot(data.out$temperature, predict.out.1)
+```
+
+Полученное значение корреляции: `r cor(data.out$whole_weight, weight.predict.out.1)`
+
+
+
+
+
+
+
+
+
+########################
+```{r}
+linear.model.2 <- lm(temperature ~ day_time, data=data) 
+summary(linear.model.2)
+plot(linear.model.2)
+```
+
+
