@@ -152,7 +152,7 @@ validation <- data[-validation_index,]
 ```
 
 ```{r}
-linear.model.half.1 <- lm(temperature ~ radiation +pressure +humidity +wind_direction +wind_speed +day_time, data=data.in) # тренировка лин. модели по набору данных data.in
+linear.model.half.1 <- lm(temperature ~ radiation +pressure +humidity +wind_speed +day_time, data=data.in) # тренировка лин. модели по набору данных data.in
 summary(linear.model.half.1)
 ```
 

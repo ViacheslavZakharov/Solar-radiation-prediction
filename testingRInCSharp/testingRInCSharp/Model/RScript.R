@@ -40,7 +40,7 @@ data.in <- data[odds,] # data[1,], data[3,] ...
 data.out <- data[-odds,] # data[2,], data[4,] ...
 
 # тренировка лин. модели по набору данных data.in
-linear.model.half.1 <- lm(temperature ~ radiation + pressure + humidity + wind_direction + wind_speed + day_time, data = data.in)
+linear.model.half.1 <- lm(temperature ~ radiation + pressure + humidity + wind_speed + day_time, data = data.in)
 
 nrow(data)
 
