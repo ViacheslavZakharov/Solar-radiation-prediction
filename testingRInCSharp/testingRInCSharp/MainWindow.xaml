@@ -7,26 +7,27 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="600">
     <Grid Background="#331FE78D">
-        <Button x:Name="Clear" Content="Сброс" HorizontalAlignment="Left" Margin="454,235,0,0" VerticalAlignment="Top" Width="110" RenderTransformOrigin="1.547,8.222" Click="Clear_Click" FontSize="16" FontWeight="Bold" Background="#FFF0C0A9" Height="44"/>
+        <Button x:Name="Clear" Content="Сброс" HorizontalAlignment="Left" Margin="398,193,0,0" VerticalAlignment="Top" Width="152" RenderTransformOrigin="1.547,8.222" Click="Clear_Click" FontSize="16" FontWeight="Bold" Background="#FFF0C0A9" Height="44"/>
         <Label x:Name="label1" Content="Прогноз температуры" HorizontalAlignment="Left" Margin="191,31,0,0" VerticalAlignment="Top" RenderTransformOrigin="5.867,0.684" FontSize="18" Background="{x:Null}" FontWeight="Bold"/>
-        <Label Content="Радиация" HorizontalAlignment="Left" Margin="57,124,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Label Content="Давление" HorizontalAlignment="Left" Margin="57,169,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.096,1.23" FontSize="14"/>
-        <Label Content="Влажность" HorizontalAlignment="Left" Margin="57,214,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Label Content="Скорость ветра" HorizontalAlignment="Left" Margin="57,259,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Label Content="Долгота дня" HorizontalAlignment="Left" Margin="57,304,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Label Content="Введите значения параметров:" HorizontalAlignment="Left" Margin="57,70,0,0" VerticalAlignment="Top" FontSize="16"/>
-        <TextBox x:Name="textBoxRadiation" HorizontalAlignment="Left" Height="23" Margin="183,124,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="textBoxPressure" HorizontalAlignment="Left" Height="23" Margin="183,169,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="textBoxHumidity" HorizontalAlignment="Left" Height="23" Margin="183,214,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="textBoxSpeed" HorizontalAlignment="Left" Height="23" Margin="183,259,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="textBoxTimeOfSun" HorizontalAlignment="Left" Height="23" Margin="183,304,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Вт/м2" HorizontalAlignment="Left" Margin="325,124,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Label Content="мм. рт. ст." HorizontalAlignment="Left" Margin="325,169,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.096,1.23" FontSize="14"/>
-        <Label Content="%" HorizontalAlignment="Left" Margin="325,214,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Label Content="м/c" HorizontalAlignment="Left" Margin="325,259,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Label Content="ч" HorizontalAlignment="Left" Margin="325,304,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <Button x:Name="Evaluate" Content="Рассчитать" HorizontalAlignment="Left" Margin="454,169,0,0" VerticalAlignment="Top" Width="110" RenderTransformOrigin="1.547,8.222" Click="Button_Click" FontSize="16" Background="#FFA9BFF0" FontWeight="Bold" Height="44"/>
-        <Label x:Name="labelResult" Content="" HorizontalAlignment="Left" Margin="57,360,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="Радиация" HorizontalAlignment="Left" Margin="30,124,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="Давление" HorizontalAlignment="Left" Margin="30,169,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.096,1.23" FontSize="14"/>
+        <Label Content="Влажность" HorizontalAlignment="Left" Margin="30,214,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="Скорость ветра" HorizontalAlignment="Left" Margin="30,259,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="Долгота дня" HorizontalAlignment="Left" Margin="30,304,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="Введите значения параметров:" HorizontalAlignment="Left" Margin="30,70,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="textBoxRadiation" HorizontalAlignment="Left" Height="23" Margin="156,124,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBoxPressure" HorizontalAlignment="Left" Height="23" Margin="156,169,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBoxHumidity" HorizontalAlignment="Left" Height="23" Margin="156,214,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBoxSpeed" HorizontalAlignment="Left" Height="23" Margin="156,259,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBoxTimeOfSun" HorizontalAlignment="Left" Height="23" Margin="156,304,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Вт/м2" HorizontalAlignment="Left" Margin="298,124,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="мм. рт. ст." HorizontalAlignment="Left" Margin="298,169,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.096,1.23" FontSize="14"/>
+        <Label Content="%" HorizontalAlignment="Left" Margin="298,214,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="м/c" HorizontalAlignment="Left" Margin="298,259,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label Content="ч" HorizontalAlignment="Left" Margin="298,304,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Button x:Name="Evaluate" Content="Рассчитать" HorizontalAlignment="Left" Margin="398,124,0,0" VerticalAlignment="Top" Width="152" RenderTransformOrigin="1.547,8.222" Click="Button_Click" FontSize="16" Background="#FFA9BFF0" FontWeight="Bold" Height="44"/>
+        <Label x:Name="labelResult" Content="" HorizontalAlignment="Left" Margin="30,360,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Label x:Name="labelAdjRSquared" Content="" HorizontalAlignment="Left" Margin="398,259,0,0" VerticalAlignment="Top" FontSize="14" RenderTransformOrigin="0.493,0.132"/>
 
     </Grid>
 </Window>

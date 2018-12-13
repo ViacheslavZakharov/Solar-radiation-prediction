@@ -32,17 +32,10 @@ namespace testingRInCSharp
             REngine.SetEnvironmentVariables();           
             engine = REngine.GetInstance();
             engine.Initialize();
-            //var rScript = File.ReadAllText(@"..\..\Model\RScript.R");
-            //MessageBox.Show(engine.Evaluate("2 + 2").AsCharacter().ToString());
-            //label1.Content = engine.Evaluate(rScript).AsCharacter()[0];
-
-            // MessageBox.Show(Directory.GetCurrentDirectory());
 
             var rScript = File.ReadAllText(@"..\..\Model\RScript.R");           
             engine.Evaluate(rScript);
-            //DataFrame data = engine.Cre
-            //label1.Content = engine.Evaluate(rScript).AsCharacter()[0];
-
+            labelAdjRSquared.Content = "Adjusted R-squared : " + string.Format("{0:0.####}",engine.Evaluate("model.summary$adj.r.squared").AsNumeric()[0]);
         }
 
         public bool CheckTextBoxes()
@@ -97,7 +90,7 @@ namespace testingRInCSharp
 
         public string FahrenheitToCelsius(double fahrenheit)
         {
-            return string.Format("{0:0.##}", (fahrenheit-32)*5/9);
+            return string.Format("{0:0.####}", (fahrenheit-32)*5/9);
         }
     }
 }
